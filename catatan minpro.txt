@@ -1,0 +1,24 @@
+MINI PROJECT BATCH 168
+
+
+FSD (Functional Spesific Document)
+BRD (Bussiness Requirement Document)
+
+created_by isinya ID user..
+Role:
+1. admin
+   Bisa buka menu apapun, tapi tidak bisa melakukan CUD selain di master (Hanya bisa crud di master)
+2. Staff
+   hanya di transaction, bisa melakukan CRU
+3. Requester
+   hanya di transaction, bisa melakukan CRU
+
+
+insert pada master role tetap ada, tapi bila tiga role di atas sudah ada,
+hidden tombol insert..
+
+-) pengetahuan bisnis proses, alur cerita program
+-) kodingnya, running well atau tidak
+-) developmentnya, ada tantangan dari tester (pengembangan)
+-) debuggingnya, ketika ada error bisa solving
+-) presentasi

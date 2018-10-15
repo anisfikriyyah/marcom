@@ -1,0 +1,38 @@
+<html>
+    <head></head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <body>
+
+        <input type="text" id="code" placeholder="code" />
+        <input type="text" id="name" placeholder="name" />
+        <input type="text" id="address" placeholder="address" />
+        <input type="number" id="phone" placeholder="phone" />
+        <input type="email" id="email" placeholder="email" />
+
+        <button name="submit" onclick="klikSubmit()">Submit</button>
+        
+        <script>
+            function klikSubmit() {
+                let code = document.getElementById('code').value;
+                let name = document.getElementById('name').value;
+                let address = document.getElementById('address').value;
+                let phone = document.getElementById('phone').value;
+                let email = document.getElementById('email').value;
+
+                $.post({
+                    url: 'http://localhost:3100/api/company',
+                    type: 'post',
+                    dataType: 'json',
+                    data: {
+                        code: document.getElementById('code').value,
+                        name: document.getElementById('name').value,
+                        address: document.getElementById('address').value,
+                        phone: document.getElementById('phone').value,
+                        email: document.getElementById('email').value,
+                        created_by: 'Administrator'
+                    }
+                })
+            }
+        </script>
+    </body>
+</html>

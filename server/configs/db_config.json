@@ -1,0 +1,12 @@
+{
+    "local": {
+        "host": "mongodb://localhost",
+        "port": 27017,
+        "dbname": "markom-apps"
+    },
+    "mlab": {
+        "host": "mongodb://markom:nodejs168@ds231133.mlab.com",
+        "port": 31133,
+        "dbname": "marcom"
+    }
+}
