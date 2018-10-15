@@ -13,18 +13,6 @@ const MenuBL = {
             responseHelper.sendResponse(res, 200, items);
         })
     },
-    updateMenuHandler: (req, res, next) => {
-        let data = req.body
-        dt_menu.updateMenuData(items => {
-            responseHelper.sendResponse(res, 200, items);
-        })
-    },
-    deleteMenuHandler: (req, res, next) => {
-        let data = req.body
-        dt_menu.deleteMenuData(data, function(items) {
-            responseHelper.sendResponse(res, 200, items);
-        })
-    },
 }
 
 module.exports = MenuBL
