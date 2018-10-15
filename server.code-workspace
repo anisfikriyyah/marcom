@@ -4,7 +4,13 @@
 			"path": "server"
 		},
 		{
-			"path": "/home/mifadhilah/Documents/XSIS/server-batch168"
+			"path": "/home/mifadhilah/Documents/XSIS/web"
+		},
+		{
+			"path": "markom-apps"
+		},
+		{
+			"path": "/home/mifadhilah/Documents/XSIS/react-project/fe-168"
 		}
 	],
 	"settings": {}
