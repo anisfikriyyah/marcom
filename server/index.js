@@ -47,8 +47,9 @@ DatabaseConnection.connect((err, db) => {
         server.use(restify.plugins.bodyParser({ mapParams: false }));
 
         // post routes
-        // server.post('/api/auth/login', AuthBisnisLogic.loginHandler);
+        server.post('/api/auth/login', AuthBL.loginHandler);
         server.post('/api/company', CompanyBL.InsertCompanyHandler);
+        server.post('/api/master/menu', MenuBL.insertMenuHandler);
         // server.post('/api/buku', AuthMiddleware.checkToken, BukuBisnisLogic.insertBukuHandler);
         // server.post('/api/pengarang', AuthMiddleware.checkToken, PengarangBisnisLogic.insertPengarangHandler);
         // server.post('/api/agama', AuthMiddleware.checkToken, AgamaBisnisLogic.insertAgamaHandler);
@@ -56,17 +57,19 @@ DatabaseConnection.connect((err, db) => {
         // // put routes
         // server.put('/api/buku', AuthMiddleware.checkToken, BukuBisnisLogic.updateBukuHandler);
         // server.put('/api/agama', AuthMiddleware.checkToken, AgamaBisnisLogic.updateAgamaHandler);
+        server.put('/api/master/menu', MenuBL.updateMenuHandler);
         
         // // delete routes
         // server.del('/api/buku', AuthMiddleware.checkToken, BukuBisnisLogic.deleteBukuHandler);
+        server.del('/api/master/menu', MenuBL.deleteMenuHandler);
 
         // // get routes
         server.get('/', (req, res, next) => {
             console.log("masuk pak eko");
         })
         server.get('/api/company', CompanyBL.getCompanyDocLength);
-        server.get('/api/doc-length/:docName', GlobalBL.getDocLength);
-        server.get('/api/menu', MenuBL.getMenuHandler);
+        server.get('/api/col-length/:colName', GlobalBL.getColLength);
+        server.get('/api/master/menu', MenuBL.getMenuHandler);
         // server.get('/api/buku', AuthMiddleware.checkToken, BukuBisnisLogic.readBukuAllHandler);
         // server.get('/api/buku-agr', AuthMiddleware.checkToken, BukuBisnisLogic.aggregatingBukuHandler);
         

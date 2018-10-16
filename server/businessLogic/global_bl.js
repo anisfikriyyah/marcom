@@ -2,9 +2,9 @@ const responseHelper = require('../helpers/responseHelper');
 const dt = require('../datalayer/dt')
 
 const GlobalBL = {
-    getDocLength: (req, res, next) => {
-        let docName = req.params.docName
-        dt.getLength(docName, function (err, items) {
+    getColLength: (req, res, next) => {
+        let colName = req.params.colName
+        dt.getLength(colName, function (err, items) {
             responseHelper.sendResponse(res, 200, items);
         })
     },
