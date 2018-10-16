@@ -1,0 +1,22 @@
+{
+    "BASE_URL": "http://localhost:3100/api",
+    "ENDPOINTS": {
+        "LOGIN": "/auth/login",
+        "M_COMPANY": "/master/company",
+        "M_EMPLOYEE": "/master/employee",
+        "M_ROLE": "/master/role",
+        "M_MENU": "/master/menu",
+        "M_MENU-ACCESS": "/master/menu-access",
+        "M_USER": "/master/user",
+        "M_UNIT": "/master/unit",
+        "M_SOUVENIR": "/master/souvenir",
+        "M_PRODUCT": "/master/product",
+        "T_EVENT": "/transaction/event",
+        "T_DESIGN": "/transaction/design",
+        "COL_LENGTH": "/col-length"
+    },
+    "LS": {
+        "USERDATA": "THIS_USERDATA_BATCH168",
+        "TOKEN": "THIS_TOKEN_BATCH168"
+    }
+}
