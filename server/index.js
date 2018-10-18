@@ -70,6 +70,7 @@ DatabaseConnection.connect((err, db) => {
         server.get('/api/company', CompanyBL.getCompanyDocLength);
         server.get('/api/col-length/:colName', GlobalBL.getColLength);
         server.get('/api/master/menu', MenuBL.getMenuHandler);
+        server.post('/api/master/menu-agr', MenuBL.getAggrMenuHandler);
         // server.get('/api/buku', AuthMiddleware.checkToken, BukuBisnisLogic.readBukuAllHandler);
         // server.get('/api/buku-agr', AuthMiddleware.checkToken, BukuBisnisLogic.aggregatingBukuHandler);
         

@@ -47,7 +47,7 @@ class ViewMenu extends React.Component {
                     </table>
                 </ModalBody>
                 <ModalFooter>
-                    <Button color="danger" onClick={this.props.closeModalHandler}>Close</Button>
+                    <Button color="warning" onClick={this.props.closeModalHandler}>Close</Button>
                 </ModalFooter>
             </Modal>
         )

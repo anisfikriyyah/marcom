@@ -21,10 +21,20 @@ const MenuBL = {
     },
     deleteMenuHandler: (req, res, next) => {
         let data = req.body
-        dt_menu.deleteMenuData(data, function(err, items) {
-            responseHelper.sendResponse(res, 200, items);
+        dt_menu.deleteMenuData(data, function(status, items) {
+            if (status === 0) {
+                responseHelper.sendResponse(res, 304, items);
+            } else {
+                responseHelper.sendResponse(res, 200, items);
+            }
         })
     },
+    getAggrMenuHandler: (req, res, next) => {
+        let data = req.body
+        dt_menu.getAggrMenu(data, (status, items) => {
+            responseHelper.sendResponse(res, 200, items)
+        })
+    }
 }
 
 module.exports = MenuBL

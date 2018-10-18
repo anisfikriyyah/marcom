@@ -13,7 +13,6 @@ class ListMenu extends React.Component {
     constructor(props){
         super(props)
         this.state = {
-            showCreateMenu:false,
             menu: [],
             editData: {},
             editMenu: false,
@@ -25,7 +24,6 @@ class ListMenu extends React.Component {
             colLength: 0,
             visible: false
         }
-        this.closeHandler=this.closeHandler.bind(this)
         this.deleteHandler=this.deleteHandler.bind(this)
         this.deleteModalHandler = this.deleteModalHandler.bind(this)
         this.viewModalHandler = this.viewModalHandler.bind(this)
@@ -35,8 +33,69 @@ class ListMenu extends React.Component {
 
     async getListMenu(path) {
         let result = await API.getListItem(path);
+        result.map(el => {
+            el.isHide = false
+        })
+        
         this.setState({
             menu: result
+        })
+    }
+
+    autoGenerateRois = () => {
+        // YY.MM.DD.NN
+        const { employee } = this.state
+        const date = new Date()
+        let YY = date.getFullYear().slice(2)
+        let MM = date.getMonth() + 1
+        if (MM < 10) {
+            MM = '0' + MM
+        }
+        let DD = date.getDate()
+        let prior = `${YY}.${MM}.${DD}.`
+        let emp_id = employee.employee_number
+
+        let count = emp_id.map(ele => {
+            if (employee.employee_number.indexOf(prior) > -1) {
+                return 1
+            }
+        })
+
+        if (count.length > 0) {
+            if (count.length < 10) {
+                return prior+'0'+count.length
+            } else {
+                return prior + count.length
+            }
+        } else {
+            return prior + '01'
+        }
+
+    }
+
+    searchHandler = (e) => {
+        const { menu } = this.state
+        let searchStr = e.target.value.toLowerCase().trim()
+        let key = 0
+        menu.map((el, keys) => {
+            key = String(keys + 1)
+            const { code, name, created_by, created_date } = el
+           
+            if (
+                key.indexOf(searchStr) === -1 &&
+                code.toLowerCase().indexOf(searchStr) === -1 &&
+                name.toLowerCase().indexOf(searchStr) === -1 &&
+                created_date.indexOf(searchStr) === -1 &&
+                created_by.toLowerCase().indexOf(searchStr) === -1
+            ) {
+                el.isHide = true
+            } else {
+                el.isHide = false
+            }
+        })
+        
+        this.setState({
+            menu: menu
         })
     }
 
@@ -70,7 +129,7 @@ class ListMenu extends React.Component {
     }
 
     componentDidMount() {
-        this.getListMenu(apiconfig.ENDPOINTS.M_MENU);
+        this.SPA();
         this.getColLength()
     }
 
@@ -121,22 +180,21 @@ class ListMenu extends React.Component {
         })
     }
 
+    SPA = () => {
+        this.getListMenu(apiconfig.ENDPOINTS.M_MENU)
+    }
+
     closeModalHandler = () => {
-        this.getListMenu(apiconfig.ENDPOINTS.M_MENU);
         this.setState({
             viewMenu : false,
             editMenu : false,
-            deleteMenu : false    
+            deleteMenu : false,
+            createMenu : false   
         })
     }
 
     showHandler = () => {
-        this.setState({showCreateMenu:true})
-    }
-
-    closeHandler(){
-        this.getListMenu(apiconfig.ENDPOINTS.M_MENU);
-        this.setState({showCreateMenu:false})
+        this.setState({createMenu :true})
     }
 
     deleteHandler(param){
@@ -166,11 +224,6 @@ class ListMenu extends React.Component {
         .catch((error)=>{
             console.log(error)
         })
-    }
-
-    setFade = () => {
-        alert('masuk')
-        
     }
 
     modalStatus(status, message) {
@@ -203,17 +256,15 @@ class ListMenu extends React.Component {
 
             {
                 this.state.alertData.status === 1 ?
-                    <Alert isOpen={this.state.visible} className="alert-success">
-                        <b>Data Deleted!</b> Data menu with code <b>
+                    <Alert isOpen={this.state.visible} color="success" className="alert-set">
                         {this.state.alertData.message}
-                        </b> has been deleted!
                         </Alert>
                     : ''
             }
             {
                 this.state.alertData.status === 2 ?
-                    <Alert isOpen={this.state.visible}>
-                        Deleting data <b> {this.state.alertData.message} </b> unsuccessfull
+                    <Alert isOpen={this.state.visible} color="danger" className="alert-set">
+                        {this.state.alertData.message}
                         </Alert>
                     : ''
             }
@@ -222,29 +273,33 @@ class ListMenu extends React.Component {
                 onClick ={this.showHandler}> Add </button>
                 
                 <form class="form-inline">
-                    <input type="text" className="form-control col-sm-11" placeholder="Cari data" id="text"/>
+                    <input type="text" className="form-control col-sm-11" placeholder="Cari data" id="text" onChange={this.searchHandler}/>
                 </form>
 
                 <CreateMenu
-                show = {this.state.showCreateMenu}
-                closeHandler={this.closeHandler}
+                show = {this.state.createMenu }
+                closeModalHandler={this.closeModalHandler}
                 colLength = {this.state.colLength}
-                incCol = {this.incColLength} />
+                incCol = {this.incColLength}
+                modalStatus = {this.modalStatus} 
+                spaFunc = {this.SPA} />
                 <ViewMenu
                 view = {this.state.viewMenu}
                 closeModalHandler = {this.closeModalHandler} 
-                menu = {this.state.currentMenu}/>
+                menu = {this.state.currentMenu} />
                 <DeleteMenu
                 delete = {this.state.deleteMenu}
                 menu = {this.state.currentMenu}
                 closeModalHandler = {this.closeModalHandler}
-                modalStatus = {this.modalStatus}/>
+                modalStatus = {this.modalStatus}
+                spaFunc = {this.SPA} />
                 <EditMenu
                 edit = {this.state.editMenu}
                 closeModalHandler = {this.closeModalHandler}
                 menu = {this.state.currentMenu}
                 modalStatus = {this.modalStatus}
-                oriMenu = {this.state.editData}/>
+                oriMenu = {this.state.editData}
+                spaFunc = {this.SPA} />
             </div>
 
                 <div className="container" style={{paddingTop: '40px'}}>
@@ -261,28 +316,24 @@ class ListMenu extends React.Component {
                     </thead>
                     <tbody>
                        {
-                          this.state.menu.map((ele,x)=>
-                                <tr>
-                                  <td>{x+1}</td>
-                                  <td>{ele.code}</td>
-                                  <td>{ele.name}</td>
-                                  <td>{ele.created_date}</td>
-                                  <td>{ele.created_by}</td>
-                                  <td>
-                                  <Link to='#'>
-                       <span onClick = {() => {this.viewModalHandler(ele._id)}} className="fa fa-search" style={{fontSize : '18px', paddingRight : '30px'}} />    
-                        
-                      <span onClick = {() => {this.editModalHandler(ele._id)}} class="fa fa-edit" style={{fontSize : '18px', paddingRight : '30px'}} />            
-                        
-                         <span onClick = {() => {this.deleteModalHandler(ele._id)}} class="fa fa-trash" style={{fontSize : '18px'}} />
-                            
-                      </Link>
-                    </td>
-                                </tr>
-                             
-                           
-                        
-                            )
+                            this.state.menu.map((ele,x)=> {
+                                if (!ele.isHide) {
+                                    return <tr>
+                                        <td>{x+1}</td>
+                                        <td>{ele.code}</td>
+                                        <td>{ele.name}</td>
+                                        <td>{ele.created_date}</td>
+                                        <td>{ele.created_by}</td>
+                                        <td>
+                                            <Link to='#' className="action-button">
+                                            <span onClick = {() => {this.viewModalHandler(ele._id)}} className="fa fa-search" style={{fontSize : '18px', paddingRight : '30px'}} />    
+                                            <span onClick = {() => {this.editModalHandler(ele._id)}} class="fa fa-edit" style={{fontSize : '18px', paddingRight : '30px'}} />            
+                                            <span onClick = {() => {this.deleteModalHandler(ele._id)}} class="fa fa-trash" style={{fontSize : '18px'}} />
+                                            </Link>
+                                        </td>
+                                    </tr>
+                                }
+                            })
                        }
                     </tbody>
                 </table>

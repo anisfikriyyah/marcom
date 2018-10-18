@@ -135,11 +135,25 @@ body {
   color: white;
 }
 
-.alert-success {
+.alert-set {
   position: fixed;
   top: 60px;
-  left: 35%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, 0%);
   z-index: 999;
+}
+
+.confirm-modal {
+  transform: translate(0, 160%);
+}
+
+.action-button:hover {
+  color: #007bff
+}
+
+.action-button span {
+  padding: 3px 15px !important;
 }
 
 .tombol-page:hover {

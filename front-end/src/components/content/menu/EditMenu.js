@@ -2,6 +2,7 @@ import React from 'react'
 import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from 'reactstrap'
 import axios from 'axios'
 import apiconfig from '../../../configs/api.config.json'
+import ConfirmModal from './ConfirmModal'
 
 class EditMenu extends React.Component {
     constructor(props) {
@@ -14,7 +15,9 @@ class EditMenu extends React.Component {
                 controller_edit: '',
                 parent_id_edit: ''
             },
-            updated_by: userdata.username
+            updated_by: userdata.username,
+            isSuccess : false,
+            confirmStatus : false
         }
     }
 
@@ -29,38 +32,79 @@ class EditMenu extends React.Component {
     componentWillReceiveProps(data) {
         this.setState({
             formdata: data.menu,
+            isSuccess: false
         })
+    }
+
+    trimString = (str) => {
+        return str.replace(/^\s+|\s+$/gm,'')
+    }
+
+    successHandler = () => {
+        this.setState({
+            isSuccess: true
+        })
+    }
+
+    closeConfirmModal = () => {
+        this.setState({
+            confirmStatus: false
+        })
+    }
+
+    openConfirmModal = () => {
+        this.setState({ confirmStatus: true });
     }
 
     submitHandler = () => {
         let token = localStorage.getItem(apiconfig.LS.TOKEN)
-        let option = {
-            url: apiconfig.BASE_URL+apiconfig.ENDPOINTS.M_MENU,
-            method: "put",
-            headers: {
-                "authorization": token,
-                "Content-Type" : "application/json"
-            },
-            data: {
-                code: this.state.formdata.code_edit,
-                name: this.state.formdata.name_edit,
-                controller: this.state.formdata.controller_edit,
-                parent_id: this.state.formdata.parent_id_edit,
-                updated_by: this.state.updated_by
-            }
+        let tmp = this.state.formdata
+        tmp.name_edit = this.trimString(this.state.formdata.name_edit)
+        tmp.controller_edit = this.trimString(this.state.formdata.controller_edit)
+        this.setState({
+            formdata: tmp
+        })
+        
+        if ( this.state.formdata.name_edit === "" ) {
+            alert('Please add menu name first')
+        } else if (this.state.formdata.controller_edit === "") {
+            alert('Please add menu controller first')
         }
-        axios(option)
-        .then((response) => {
-            if(response.data.code === 200) {
-                this.props.closeModalHandler()
-                alert('Success')
-            } else {
-                alert(response.data.message)
+        else {
+            this.setState({ disableStatus: true })
+            let option = {
+                url: apiconfig.BASE_URL+apiconfig.ENDPOINTS.M_MENU,
+                method: "put",
+                headers: {
+                    "authorization": token,
+                    "Content-Type" : "application/json"
+                },
+                data: {
+                    code: this.state.formdata.code_edit,
+                    name: this.state.formdata.name_edit,
+                    controller: this.state.formdata.controller_edit,
+                    parent_id: this.state.formdata.parent_id_edit,
+                    updated_by: this.state.updated_by
+                }
             }
-        })
-        .catch((error) => {
-            console.log(error);            
-        })
+            axios(option)
+            .then((response) => {
+                let sucMessage = <span><b>Data Updated! </b>Data menu <b>{this.props.menu.code_edit}</b> has been updated!</span>
+                let errMessage = <span>Updating data <b>{this.props.menu.code_edit}</b> unsuccessfull</span>
+                if(response.data.code === 200) {
+                    this.setState({ confirmStatus: false })
+                    this.props.closeModalHandler()
+                    this.props.spaFunc()
+                    this.props.modalStatus(1, sucMessage)
+                } else {
+                    this.props.modalStatus(2, errMessage)
+                }
+                this.setState({ disableStatus: false })
+            })
+            .catch((error) => {
+                console.log(error);            
+            })
+        }
     }
 
     render(){
@@ -112,7 +156,13 @@ class EditMenu extends React.Component {
                 </table>
                 </ModalBody>
                 <ModalFooter>
-                    <Button color="primary" onClick ={this.submitHandler}>Update</Button>
+                    <Button color="primary" onClick ={this.openConfirmModal}>Update</Button>
+                    <ConfirmModal 
+                        confirm = {this.state.confirmStatus}
+                        successHandler = {this.successHandler}
+                        closeModal = {this.closeConfirmModal}
+                        code = {this.state.formdata.code_edit} 
+                        submit = {this.submitHandler} />
                     <Button color="warning" onClick={this.props.closeModalHandler}>Cancel</Button>
                 </ModalFooter>
             </Modal>

@@ -2,8 +2,8 @@ const DB = require('../models/db');
 const db = DB.getConnection();
 
 const dt = {
-    getLength: (colName, callback) => {
-        db.collection(colName).countDocuments({}, (err, doc) => {
+    getLength: (docName, callback) => {
+        db.collection(docName).countDocuments({}, (err, doc) => {
             return callback(err, doc);
         })
     },
@@ -13,7 +13,7 @@ const dt = {
         }, (err, doc) => {
             return callback(err, doc);
         })
-    },
+    }
 }
 
 module.exports = dt;

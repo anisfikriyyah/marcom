@@ -14,7 +14,8 @@ class CreateMenu extends React.Component{
                 controller : '',
                 parent_id : '',
                 created_by :userdata.username
-            }
+            },
+            disableStatus: false
         }
     }
     changeHandler = (e) => {
@@ -70,28 +71,36 @@ class CreateMenu extends React.Component{
             alert('Please add menu controller first')
         }
         else {
-            let option = {
-                url: apiconfig.BASE_URL+apiconfig.ENDPOINTS.M_MENU,
-                method: "post",
-                headers:{
-                    "authorization": token,
-                    "Content-Type" : "application/json"
-                },
-                data: this.state.formdata
-            }
-            axios(option)
-            .then((response)=>{
-                if(response.data.code === 200){
-                    this.props.incCol()
-                    this.props.closeHandler()
-                    alert('Success')
-                } else {
-                    alert(response.data.message)
+            this.setState({ disableStatus: true })
+            for (let i = 0; i < 3; i++) {
+                let option = {
+                    url: apiconfig.BASE_URL+apiconfig.ENDPOINTS.M_MENU,
+                    method: "post",
+                    headers:{
+                        "authorization": token,
+                        "Content-Type" : "application/json"
+                    },
+                    data: this.state.formdata
                 }
-            })
-            .catch((error)=>{
-                console.log(error);            
-            })
+                axios(option)
+                .then((response)=>{
+                    let sucMessage = <span><b>Data Saved! </b>New menu has been add with code <b>{this.state.formdata.code} !</b></span>
+                    let errMessage = <span>Data <b> failed </b> to insert, please try again</span>
+                    if(response.data.code === 200){
+                        this.props.incCol()
+                        this.props.closeModalHandler()
+                        this.props.spaFunc()
+                        this.props.modalStatus(1, sucMessage)
+                    } else {
+                        this.props.modalStatus(2, errMessage)
+                        this.props.closeModalHandler()
+                    }
+                })
+                .catch((error)=>{
+                    console.log(error);            
+                })
+                this.setState({ disableStatus: false })
+            }
         }
     }
 
@@ -144,8 +153,8 @@ class CreateMenu extends React.Component{
                 </table>
                 </ModalBody>
                 <ModalFooter>
-                    <Button color="primary" onClick = {this.submitHandler}>Save</Button>
-                    <Button color="warning" onClick = {this.props.closeHandler}>Cancel</Button>
+                    <Button color="primary" disabled={this.state.disableStatus} onClick = {this.submitHandler}>Save</Button>
+                    <Button color="warning" disabled={this.state.disableStatus} onClick = {this.props.closeModalHandler}>Cancel</Button>
                 </ModalFooter>
         </Modal>
         )
