@@ -30,16 +30,12 @@ DatabaseConnection.connect((err, db) => {
         const CompanyBL = require('./businessLogic/company_bl')
         const GlobalBL = require('./businessLogic/global_bl')
         const MenuBL = require('./businessLogic/menu_bl')
-        // const UserBL = require('./businessLogic/user_bl')
-        // const BukuBisnisLogic = require('./bisnisLogic/buku_bisnislogic');
+        const DesignBL = require('./businessLogic/design_bl')
+        const EventBL = require('./businessLogic/event_bl')
+        const ProductBL = require('./businessLogic/product_bl');
         // const AgamaBisnisLogic = require('./bisnisLogic/agama_bisnislogic');
         // const BukuBisnisLogic = require('./bisnisLogic/buku_bisnislogic');
         // const BukuBisnisLogic = require('./bisnisLogic/buku_bisnislogic');
-        // const PenerbitBisnisLogic = require('./bisnisLogic/penerbit_bisnislogic');
-        // const PengarangBisnisLogic = require('./bisnisLogic/pengarang_bisnislogic');
-        // const TypeBukuBisnisLogic = require('./bisnisLogic/type_buku_bisnislogic');
-        // const KotaBisnisLogic = require('./bisnisLogic/kota_bisnislogic');
-        // const ProvinsiBisnisLogic = require('./bisnisLogic/provinsi_bisnislogic');
         // const AuthMiddleware = require('./middlewares/auth_middleware');
         // const Collection = require('./bisnisLogic/collection_list');
 
@@ -50,6 +46,8 @@ DatabaseConnection.connect((err, db) => {
         server.post('/api/auth/login', AuthBL.loginHandler);
         server.post('/api/company', CompanyBL.InsertCompanyHandler);
         server.post('/api/master/menu', MenuBL.insertMenuHandler);
+        server.post('/api/master/menu-agr', MenuBL.getAggrMenuHandler);
+        server.post('/api/transaction/design', DesignBL.insertDesignHandler);
         // server.post('/api/buku', AuthMiddleware.checkToken, BukuBisnisLogic.insertBukuHandler);
         // server.post('/api/pengarang', AuthMiddleware.checkToken, PengarangBisnisLogic.insertPengarangHandler);
         // server.post('/api/agama', AuthMiddleware.checkToken, AgamaBisnisLogic.insertAgamaHandler);
@@ -58,6 +56,7 @@ DatabaseConnection.connect((err, db) => {
         // server.put('/api/buku', AuthMiddleware.checkToken, BukuBisnisLogic.updateBukuHandler);
         // server.put('/api/agama', AuthMiddleware.checkToken, AgamaBisnisLogic.updateAgamaHandler);
         server.put('/api/master/menu', MenuBL.updateMenuHandler);
+        server.put('/api/transaction/design', DesignBL.updateDesignHandler);
         
         // // delete routes
         // server.del('/api/buku', AuthMiddleware.checkToken, BukuBisnisLogic.deleteBukuHandler);
@@ -67,10 +66,15 @@ DatabaseConnection.connect((err, db) => {
         server.get('/', (req, res, next) => {
             console.log("masuk pak eko");
         })
-        server.get('/api/company', CompanyBL.getCompanyDocLength);
+        server.get('/api/transaction/design/:role_id/:employee_id', DesignBL.getDesignHandler);
         server.get('/api/col-length/:colName', GlobalBL.getColLength);
+        server.get('/api/master/employee/staff', GlobalBL.getStaffHandler);
+        server.get('/api/master/employee/:code', EmployeeBL.getEmployeeHandler);
         server.get('/api/master/menu', MenuBL.getMenuHandler);
-        server.post('/api/master/menu-agr', MenuBL.getAggrMenuHandler);
+        server.get('/api/master/product', ProductBL.getProductHandler);
+        server.get('/api/transaction/event', EventBL.getEventHandler);
+        server.get('/api/transaction/design-item/:design_id', DesignBL.getDesignItemHandler);
+        
         // server.get('/api/buku', AuthMiddleware.checkToken, BukuBisnisLogic.readBukuAllHandler);
         // server.get('/api/buku-agr', AuthMiddleware.checkToken, BukuBisnisLogic.aggregatingBukuHandler);
         

@@ -135,6 +135,24 @@ body {
   color: white;
 }
 
+@media (min-width: 992px) {
+  .modal-lg {
+    max-width: 1250px;
+  }
+}
+
+.design-req th {
+  text-align: center;
+}
+
+.design-req-list input {
+  height: 52px;
+}
+
+input::placeholder, select::placeholder, .set-italic {
+  font-style: italic;
+}
+
 .alert-set {
   position: fixed;
   top: 60px;

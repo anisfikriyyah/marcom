@@ -13,6 +13,7 @@
         "M_PRODUCT": "/master/product",
         "T_EVENT": "/transaction/event",
         "T_DESIGN": "/transaction/design",
+        "T_DESIGN_ITEM": "/transaction/design-item",
         "COL_LENGTH": "/col-length"
     },
     "LS": {

@@ -8,6 +8,15 @@ const GlobalBL = {
             responseHelper.sendResponse(res, 200, items);
         })
     },
+    getStaffHandler: (req, res, next) => {
+        dt.getStaffData('RO0002', (err, items) => {
+            if (err) {
+                responseHelper.sendResponse(res, 200, err)
+            } else {
+                responseHelper.sendResponse(res, 200, items)
+            }
+        })
+    }
 }
 
 module.exports = GlobalBL

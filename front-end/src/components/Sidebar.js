@@ -12,16 +12,11 @@ class Sidebar extends React.Component {
 
     getListMenu = () => {
         let token = localStorage.getItem(apiconfig.LS.TOKEN)
-        let userData = JSON.parse(localStorage.getItem(apiconfig.LS.USERDATA))
         let option = {
-            url: apiconfig.BASE_URL + apiconfig.ENDPOINTS.M_MENU + '-agr',
-            method: "POST",
+            url: apiconfig.BASE_URL + apiconfig.ENDPOINTS.M_MENU,
+            method: "GET",
             headers: {
-                "authorization": token,
-                "Content-Type": 'application/json'
-            },
-            data: {
-                user_role: userData.m_role_id
+                "authorization": token
             }
         }
         axios(option)
@@ -57,7 +52,7 @@ class Sidebar extends React.Component {
                             this.state.menu.map(el => {
                                 if (el.parent_id === 'master') {
                                     return <li className="nav-item">
-                                        <a className="nav-link" href={ el.controller } > { el.menu_name } </a>
+                                        <a className="nav-link" href={ el.controller } > { el.name } </a>
                                     </li>
                                 }
                             })
@@ -74,7 +69,7 @@ class Sidebar extends React.Component {
                             this.state.menu.map(el => {
                                 if (el.parent_id === 'transaction') {
                                     return <li className="nav-item">
-                                        <a className="nav-link" href={ el.controller } > { el.menu_name } </a>
+                                        <a className="nav-link" href={ el.controller } > { el.name } </a>
                                     </li>
                                 }
                             })
